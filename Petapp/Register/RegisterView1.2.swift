@@ -10,6 +10,7 @@ import SwiftData
 import PhotosUI
 
 struct RegisterProfileView: View {
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) var presentationMode
 
@@ -20,7 +21,7 @@ struct RegisterProfileView: View {
     @State private var dateOfBirth = Date()
     @State private var weight = ""
     @State private var height = ""
-    @State private var category = "Dog" // ✅ FIX: Ensure it matches `PetProfile`
+    @State private var category = "Dog" // ✅ Matches PetProfile model
     @State private var gender = "Male"
     @State private var selectedImage: UIImage? = nil
     @State private var isImagePickerPresented = false
@@ -29,11 +30,10 @@ struct RegisterProfileView: View {
     let energyLevels = ["Low", "Medium", "High"]
     let startDate = Calendar.current.date(from: DateComponents(year: 2000))!
     let endDate = Date()
-
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Pet Image Selection
+                //  Pet Image Selection
                 if let image = selectedImage {
                     Image(uiImage: image)
                         .resizable()
@@ -42,21 +42,29 @@ struct RegisterProfileView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                         .clipped()
                 } else {
-                    Image("Dogimage")
+                    Image("Dogimage") // Default pet image
                         .resizable()
                         .scaledToFill()
                         .frame(width: 350, height: 220)
                         .clipShape(RoundedRectangle(cornerRadius: 20))
                         .clipped()
                 }
-                
+
                 Button(action: { isImagePickerPresented.toggle() }) {
                     Text("Select Pet Image")
                         .foregroundColor(.white)
                         .padding()
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.6), Color.purple]), startPoint: .leading, endPoint: .trailing))
+                        .frame(width:200) // Ensure it expands properly
+                        .background(
+                            LinearGradient(
+                                gradient: Gradient(colors: [Color.purple, Color.blue]),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
                         .cornerRadius(10)
                 }
+
                 .photosPicker(isPresented: $isImagePickerPresented, selection: $imageSelection)
                 .onChange(of: imageSelection) { newItem in
                     Task {
@@ -67,26 +75,35 @@ struct RegisterProfileView: View {
                     }
                 }
 
-                // Text Fields
-                CustomTextField2(icon: "person", placeholder: "Pet Name", text: $petName)
-                CustomTextField2(icon: "location", placeholder: "Location", text: $location)
-                CustomTextField2(icon: "text.justify", placeholder: "Additional Details", text: $details)
+                //  Text Fields
+                CustomTextField(icon: "person", placeholder: "Pet Name", text: $petName)
+                CustomTextField(icon: "location", placeholder: "Location", text: $location)
+                CustomTextField(icon: "text.justify", placeholder: "Additional Details", text: $details)
 
-                // Pet Type Selection (Dog / Cat)
+                //  Category Selection (Dog / Cat)
                 HStack {
                     ForEach(["Dog", "Cat"], id: \.self) { type in
                         Button(action: { category = type }) {
                             Text(type)
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                                .background(category == type ? Color.purple : Color.gray.opacity(0.3))
+                                .background {
+                                    if category == type {
+                                        LinearGradient(
+                                            gradient: Gradient(colors: [Color.purple, Color.blue]),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    } else {
+                                        Color.gray.opacity(0.3)
+                                    }
+                                }
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
                     }
                 }
-
-                // Gender Selection
+                //  Gender Selection
                 Picker("Gender", selection: $gender) {
                     Text("Male").tag("Male")
                     Text("Female").tag("Female")
@@ -94,28 +111,38 @@ struct RegisterProfileView: View {
                 .pickerStyle(SegmentedPickerStyle())
                 .padding()
 
-                // Energy Level Selection
+                //  Energy Level Selection
                 Menu {
                     ForEach(energyLevels, id: \.self) { level in
-                        Button(action: {
-                            energyLevel = level
-                        }) {
+                        Button(action: { energyLevel = level }) {
                             Text(level)
                         }
                     }
                 } label: {
                     HStack {
                         Image(systemName: "bolt")
+                            .foregroundColor(.white)
+                        
                         Text(energyLevel.isEmpty ? "Select Energy Level" : energyLevel)
+                            .foregroundColor(.white)
+                        
                         Spacer()
+                        
                         Image(systemName: "chevron.down")
+                            .foregroundColor(.white)
                     }
                     .padding()
-                    .background(Color.gray.opacity(0.1))
+                    .background(
+                        LinearGradient(
+                        gradient: Gradient(colors: [Color.purple, Color.blue]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+)
                     .cornerRadius(10)
                 }
 
-                // Date Picker
+                //  Date Picker
                 VStack(alignment: .leading) {
                     Text("Date of Birth")
                         .font(.subheadline)
@@ -130,29 +157,35 @@ struct RegisterProfileView: View {
                 }
                 .padding(.horizontal)
 
-                // Weight Input
+                //  Weight Input
                 HStack {
-                    CustomTextField2(icon: "scalemass", placeholder: "Weight (kg)", text: $weight)
+                    CustomTextField(icon: "scalemass", placeholder: "Weight (kg)", text: $weight)
                         .keyboardType(.decimalPad)
                     UnitButton(title: "KG")
                 }
                 .padding(.horizontal)
 
-                // Height Input
+                //  Height Input
                 HStack {
-                    CustomTextField2(icon: "ruler", placeholder: "Height (cm)", text: $height)
+                    CustomTextField(icon: "ruler", placeholder: "Height (cm)", text: $height)
                         .keyboardType(.decimalPad)
                     UnitButton(title: "CM")
                 }
                 .padding(.horizontal)
 
-                // Save Profile Button
+                //  Save Profile Button
                 Button(action: saveProfile) {
                     Text("Save Profile")
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.blue)
+                        .background(
+                            LinearGradient(
+                            gradient: Gradient(colors: [Color.purple, Color.blue]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+)
                         .cornerRadius(10)
                 }
                 .padding()
@@ -161,15 +194,33 @@ struct RegisterProfileView: View {
             }
             .padding()
             .navigationTitle("Register Pet")
-            .navigationBarBackButtonHidden(false)
+            .navigationBarBackButtonHidden(true) // Hide default back button
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        dismiss() // Custom back button action
+                    }) {
+                        HStack {
+                            Image(systemName: "chevron.left") //  Custom back icon
+                                .font(.system(size: 18, weight: .semibold))
+                            Text("Back")
+                        }
+                        .foregroundColor(.purple) //  Purple back button color
+                    }
+                }
+            }
         }
     }
 
-    // Save Profile Function
+
     func saveProfile() {
-        guard let weightValue = Double(weight), let heightValue = Double(height) else { return }
+        guard let weightValue = Double(weight), let heightValue = Double(height) else {
+            print("❌ Error: Invalid weight or height input")
+            return
+        }
+
         let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
-        
+
         let newProfile = PetProfile(
             petName: petName,
             location: location,
@@ -178,14 +229,25 @@ struct RegisterProfileView: View {
             dateOfBirth: dateOfBirth,
             weight: weightValue,
             height: heightValue,
-            category: category, // ✅ FIX: Corrected category
+            category: category,
             gender: gender,
             imageData: imageData
         )
-        
-        modelContext.insert(newProfile)
-        presentationMode.wrappedValue.dismiss()
+
+        print(" Attempting to insert pet: \(newProfile.petName)") // Debug Print
+
+        modelContext.insert(newProfile) //  Insert pet into SwiftData
+
+        do {
+            try modelContext.save() //  Force SwiftData to save
+            print(" Pet saved successfully: \(newProfile.petName)")
+        } catch {
+            print(" Failed to save pet: \(error.localizedDescription)")
+        }
+
+        presentationMode.wrappedValue.dismiss() //  Close the view
     }
+
 }
 
 // MARK: - Unit Button
@@ -197,12 +259,18 @@ struct UnitButton: View {
             .foregroundColor(.white)
             .padding(.vertical, 12)
             .padding(.horizontal, 20)
-            .background(Color.purple)
+            .background(
+                LinearGradient(
+                gradient: Gradient(colors: [Color.purple, Color.blue]),
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+)
             .cornerRadius(10)
     }
 }
 
-// Preview
+// MARK: - Preview
 struct RegisterProfileView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {

@@ -6,11 +6,15 @@
 //
 
 
+
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
+    @Environment(\.modelContext) private var context // ✅ Use SwiftData context automatically
+
     var body: some View {
-        NavigationView {
+        NavigationStack { // ✅ Updated to NavigationStack
             ZStack {
                 // Background Image with overlay
                 Image("backgroundpet")
@@ -18,11 +22,11 @@ struct MainView: View {
                     .scaledToFill()
                     .ignoresSafeArea()
                     .overlay(Color.black.opacity(0.3))
-                
+
                 // Main content
                 VStack(spacing: 0) {
                     Spacer()
-                    
+
                     // Welcome Text
                     VStack(spacing: 10) {
                         Text("Welcome to")
@@ -33,41 +37,30 @@ struct MainView: View {
                             .foregroundColor(.white)
                     }
                     .padding(.bottom, 40)
-                    
+
                     // Login Container
                     VStack(spacing: 25) {
                         // Sign In Button (Navigates to LoginView)
                         NavigationLink(destination: LoginView()) {
-                            HStack {
-                                Text("Sign In")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                            }
-                            .foregroundColor(.white)
-                            .frame(width: 280, height: 50)
-                            .background(
-                                LinearGradient(
-                                    colors: [Color.blue, Color.purple],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
+                            Text("Sign In")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(width: 280, height: 50)
+                                .background(
+                                    LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
                                 )
-                            )
-                            .clipShape(Capsule())
+                                .clipShape(Capsule())
                         }
-                        
+
                         // Sign Up Button (Navigates to RegisterView)
                         NavigationLink(destination: RegisterView()) {
-                            HStack {
-                                Text("Sign Up")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                            }
-                            .foregroundColor(.black)  // Text color black
-                            .frame(width: 280, height: 50)
-                            .background(
-                                Capsule()
-                                    .fill(Color.white) // Removed the dotted border by using fill()
-                            )
+                            Text("Sign Up")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.black)
+                                .frame(width: 280, height: 50)
+                                .background(Capsule().fill(Color.white)) // ✅ Simplified background styling
                         }
                     }
                     .padding(30)
@@ -77,9 +70,9 @@ struct MainView: View {
                             .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 4)
                     )
                     .padding(.horizontal, 20)
-                    
+
                     Spacer()
-                    
+
                     // Bottom Text
                     HStack {
                         Text("Already have an account?")
@@ -94,6 +87,7 @@ struct MainView: View {
             }
         }
         .navigationBarBackButtonHidden(true) // Hides the back button
+        .tint(.purple)
     }
 }
 

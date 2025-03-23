@@ -16,19 +16,23 @@ struct RegisterView: View {
     @State private var navigateToProfile = false
 
     var body: some View {
-        NavigationView {  //  Wrap with NavigationView
+        NavigationView {
             VStack(spacing: 20) {
-                Text("Hey there,")
-                    .font(.headline)
-                    .foregroundColor(.black)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Hey there,")
+                        .font(.headline)
+                        .foregroundColor(.black)
 
-                Text("Create an Account")
-                    .font(.title)
-                    .fontWeight(.bold)
+                    Text("Create an Account")
+                        .font(.title)
+                        .fontWeight(.bold)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
 
                 VStack(spacing: 15) {
-                    CustomTextField(icon: "person", placeholder: "First Name", text: $fullName)
-                        .autocapitalization(.none)
+                    CustomTextField(icon: "person", placeholder: "Full Name", text: $fullName)
+                        .autocapitalization(.words)
 
                     CustomTextField(icon: "envelope", placeholder: "Email", text: $email)
                         .autocapitalization(.none)
@@ -41,9 +45,7 @@ struct RegisterView: View {
                 .padding(.horizontal)
 
                 // Register Button
-                Button(action: {
-                    signUpUser()
-                }) {
+                Button(action: { signUpUser() }) {
                     ZStack {
                         if isLoading {
                             ProgressView()
@@ -67,14 +69,12 @@ struct RegisterView: View {
                 }
                 .disabled(isLoading)
 
-                //  Fix Navigation Issue
+                // Navigation to Profile after registration
                 NavigationLink(
                     destination: RegisterProfileView()
-                        .navigationBarHidden(true), // Correctly placed
+                        .navigationBarBackButtonHidden(true), // Hide Back Button
                     isActive: $navigateToProfile
-                ) {
-                    EmptyView()
-                }
+                ) { EmptyView() }
                 .hidden()
 
                 // OR Divider
@@ -95,7 +95,7 @@ struct RegisterView: View {
                     Text("Already have an account?")
                         .foregroundColor(.gray)
 
-                    NavigationLink(destination: LoginView()) {
+                    NavigationLink(destination: LoginView().navigationBarBackButtonHidden(true)) {
                         Text("Login")
                             .foregroundColor(.purple)
                             .fontWeight(.bold)
@@ -106,62 +106,23 @@ struct RegisterView: View {
             .alert(isPresented: $showErrorAlert) {
                 Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
             }
-            .onAppear {
-                // Reset fields when the view appears again
-                clearFields()
-            }
-            .navigationBarBackButtonHidden(true)
-        } //  End of NavigationView
+            .onAppear { clearFields() }
+            .navigationBarBackButtonHidden(true) // Hide back button in the registration screen
+        }
+        .navigationViewStyle(.stack)
     }
 
+    // MARK: - Sign Up Function
     private func signUpUser() {
-        guard !fullName.trimmingCharacters(in: .whitespaces).isEmpty else {
-            showError(message: "Full name is required.")
-            return
-        }
-
-        guard fullName.count >= 6 else {
-            showError(message: "Full name must be at least 6 characters.")
-            return
-        }
-
-        guard let firstLetter = fullName.first, firstLetter.isUppercase else {
-            showError(message: "Full name must start with a capital letter.")
-            return
-        }
-
-        guard !email.isEmpty else {
-            showError(message: "Email is required.")
-            return
-        }
-
-        guard email.contains("@") && email.contains(".") else {
-            showError(message: "Enter a valid email address.")
-            return
-        }
-
-        guard !password.isEmpty else {
-            showError(message: "Password is required.")
-            return
-        }
-
-        guard password.count >= 6 else {
-            showError(message: "Password must be at least 6 characters long.")
-            return
-        }
-
-        guard password == confirmPassword else {
-            showError(message: "Passwords do not match.")
-            return
-        }
-
+        guard validateFields() else { return }
+        
         isLoading = true
 
         viewModel.createAccount(email: email, password: password) { success, message in
             DispatchQueue.main.async {
-                isLoading = false // Reset loading indicator
+                isLoading = false
                 if success {
-                    navigateToProfile = true  //  Ensure state change happens on the main thread
+                    navigateToProfile = true  // Navigate to Profile
                     clearFields()
                 } else {
                     showError(message: message)
@@ -170,9 +131,44 @@ struct RegisterView: View {
         }
     }
 
-    private func showError(message: String) {
+    // MARK: - Validation Function
+    private func validateFields() -> Bool {
+        if fullName.trimmingCharacters(in: .whitespaces).isEmpty {
+            return showError(message: "Full name is required.")
+        }
+
+        if fullName.count < 6 {
+            return showError(message: "Full name must be at least 6 characters.")
+        }
+
+        if let firstLetter = fullName.first, !firstLetter.isUppercase {
+            return showError(message: "Full name must start with a capital letter.")
+        }
+
+        if email.isEmpty || !email.contains("@") || !email.contains(".") {
+            return showError(message: "Enter a valid email address.")
+        }
+
+        if password.isEmpty {
+            return showError(message: "Password is required.")
+        }
+
+        if password.count < 6 {
+            return showError(message: "Password must be at least 6 characters long.")
+        }
+
+        if password != confirmPassword {
+            return showError(message: "Passwords do not match.")
+        }
+
+        return true
+    }
+
+    // MARK: - Utility Functions
+    private func showError(message: String) -> Bool {
         errorMessage = message
         showErrorAlert = true
+        return false
     }
 
     private func clearFields() {
@@ -183,6 +179,7 @@ struct RegisterView: View {
     }
 }
 
+// MARK: - Preview
 struct RegisterView_Previews: PreviewProvider {
     static var previews: some View {
         RegisterView()

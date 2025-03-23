@@ -26,21 +26,6 @@
 			path = Petapp;
 			sourceTree = "<group>";
 		};
-		DBD5FE5B2D63015A00186721 /* HomePage */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = HomePage;
-			sourceTree = "<group>";
-		};
-		DBD5FE6B2D683F4D00186721 /* DetailsPage */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DetailsPage;
-			sourceTree = "<group>";
-		};
-		DBD5FE782D689F5300186721 /* PetTrainigPage */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PetTrainigPage;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,9 +49,6 @@
 		DB409D242D55CFD3005AB2E8 = {
 			isa = PBXGroup;
 			children = (
-				DBD5FE782D689F5300186721 /* PetTrainigPage */,
-				DBD5FE6B2D683F4D00186721 /* DetailsPage */,
-				DBD5FE5B2D63015A00186721 /* HomePage */,
 				DB409D2F2D55CFD3005AB2E8 /* Petapp */,
 				DB409D2E2D55CFD3005AB2E8 /* Products */,
 			);
@@ -97,9 +79,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				DB409D2F2D55CFD3005AB2E8 /* Petapp */,
-				DBD5FE5B2D63015A00186721 /* HomePage */,
-				DBD5FE6B2D683F4D00186721 /* DetailsPage */,
-				DBD5FE782D689F5300186721 /* PetTrainigPage */,
 			);
 			name = Petapp;
 			packageProductDependencies = (

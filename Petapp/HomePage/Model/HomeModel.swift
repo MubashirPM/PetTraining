@@ -14,4 +14,12 @@ struct Pet: Identifiable {
     let description: String
     let image: String
     var isFavorite: Bool
+    
+    init(name: String, location: String, description: String, image: String, isFavorite: Bool) {
+        self.name = name
+        self.location = location
+        self.description = description
+        self.image = image
+        self.isFavorite = isFavorite
+    }
 }

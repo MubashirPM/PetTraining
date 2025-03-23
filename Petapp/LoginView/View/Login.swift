@@ -4,7 +4,8 @@
 //
 //  Created by MUNAVAR PM on 12/02/25.
 //
-
+//
+//
 
 import SwiftUI
 import FirebaseAuth
@@ -17,7 +18,6 @@ struct LoginView: View {
     @State private var isSecured = true
     @State private var alertMessage = ""
     @State private var navigateToHome = false
-
 
     var body: some View {
         NavigationView {
@@ -87,10 +87,8 @@ struct LoginView: View {
                         viewModel.login(email: email, password: password) { success in
                             if success {
                                 navigateToHome = true
-                        
                             }
                         }
-//                        login()
                     }) {
                         Text("Login")
                             .fontWeight(.semibold)
@@ -129,9 +127,9 @@ struct LoginView: View {
                         Text("Don't have an account yet?")
                             .foregroundColor(.gray)
 
-                        NavigationLink(destination: RegisterView()) {
+                        NavigationLink(destination: RegisterView().navigationBarBackButtonHidden(true)) {
                             Text("Register")
-                                .foregroundColor(.blue)
+                                .foregroundColor(.purple)
                                 .fontWeight(.semibold)
                         }
                     }
@@ -145,11 +143,10 @@ struct LoginView: View {
                 Alert(title: Text("Login Error"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("OK")))
             }
             .navigationBarHidden(true)
+            .tint(.purple)
         }
         .navigationViewStyle(.stack)
     }
-
-    
 }
 
 // MARK: - Preview

@@ -35,13 +35,15 @@ struct WorkoutDetailsView: View {
                 .padding(.horizontal)
             
             // Default Description Instead of Exercises
-            Text("Every dog and cat should get daily exercise. Walking, running, or playing is essential for their health.")
-                .font(.body)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.gray)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 10)
+            Text(
+                "Every dog and cat should get daily exercise. Walking, running, or playing is essential for their health."
+            )
+            .font(.body)
+            .fontWeight(.bold)
+            .multilineTextAlignment(.center)
+            .foregroundColor(.gray)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 10)
             
             // Timer Display
             Text(timeString(viewModel.timeRemaining))
@@ -75,7 +77,12 @@ struct WorkoutDetailsView: View {
                         .frame(width: 100, height: 40)
                         .background(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.purple.opacity(0.6), Color.blue]),
+                                gradient: Gradient(
+                                    colors: [
+                                        Color.purple.opacity(0.6),
+                                        Color.blue
+                                    ]
+                                ),
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -98,7 +105,9 @@ struct WorkoutDetailsView: View {
             Spacer()
         }
         .onAppear {
-            print("DEBUG: Opened WorkoutDetailsView -> \(workout.name), Duration: \(workout.duration) sec")
+            print(
+                "DEBUG: Opened WorkoutDetailsView -> \(workout.name), Duration: \(workout.duration) sec"
+            )
             viewModel.startTimer(duration: workout.duration)
         }
         .onDisappear {
@@ -106,7 +115,9 @@ struct WorkoutDetailsView: View {
         }
         .navigationBarBackButtonHidden(true) //  Hide default back button
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) { //  Custom Purple Back Button
+            ToolbarItem(
+                placement: .topBarLeading
+            ) { //  Custom Purple Back Button
                 Button(action: {
                     dismiss() //  Now dismiss() works
                 }) {
@@ -122,12 +133,12 @@ struct WorkoutDetailsView: View {
     }
 }
 
-    // Helper function to format time as "MM:SS"
-    private func timeString(_ seconds: Int) -> String {
-        let minutes = seconds / 60
-        let remainingSeconds = seconds % 60
-        return String(format: "%02d:%02d", minutes, remainingSeconds)
-    }
+// Helper function to format time as "MM:SS"
+private func timeString(_ seconds: Int) -> String {
+    let minutes = seconds / 60
+    let remainingSeconds = seconds % 60
+    return String(format: "%02d:%02d", minutes, remainingSeconds)
+}
 
 
 // MARK: - RunningWheelView
@@ -140,7 +151,14 @@ struct RunningWheelView: View {
             // Detailed Rotating Wheel
             ZStack {
                 Circle()
-                    .stroke(LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing), lineWidth: 8)
+                    .stroke(
+                        LinearGradient(
+                            colors: [.blue, .purple],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ),
+                        lineWidth: 8
+                    )
                     .frame(width: 180, height: 180)
                 
                 // Wheel spokes
@@ -153,18 +171,32 @@ struct RunningWheelView: View {
                 }
             }
             .rotationEffect(.degrees(isWheelRotating ? -360 : 0))
-            .animation(Animation.linear(duration: 2).repeatForever(autoreverses: false), value: isWheelRotating)
+            .animation(
+                Animation
+                    .linear(duration: 2)
+                    .repeatForever(autoreverses: false),
+                value: isWheelRotating
+            )
             
             // Cat at the bottom of the wheel
             Image(systemName: "cat.fill")
                 .resizable()
                 .overlay(
-                    LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
-                        .mask(Image(systemName: "cat.fill").resizable())
+                    LinearGradient(
+                        colors: [.blue, .purple],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .mask(Image(systemName: "cat.fill").resizable())
                 )
                 .frame(width: 40, height: 40)
                 .offset(y: 60 + (isWalking ? 5 : 0))
-                .animation(Animation.easeInOut(duration: 0.3).repeatForever(autoreverses: true), value: isWalking)
+                .animation(
+                    Animation
+                        .easeInOut(duration: 0.3)
+                        .repeatForever(autoreverses: true),
+                    value: isWalking
+                )
                 .scaleEffect(x: -1.0) // Flipping the cat sideways
         }
         .onAppear {

@@ -22,7 +22,9 @@ struct TrainView: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.purple, Color.blue]),
+                                gradient: Gradient(
+                                    colors: [Color.purple, Color.blue]
+                                ),
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -30,12 +32,18 @@ struct TrainView: View {
                         .frame(height: 140) // Reduced height
                         .padding(.horizontal,10)
                     HStack {
-                        VStack(alignment: .leading, spacing: 10) { //  Increased spacing
+                        VStack(
+                            alignment: .leading,
+                            spacing: 10
+                        ) { //  Increased spacing
                             Text("Start Strong and Set Training Goals")
                                 .font(.title3)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
-                                .fixedSize(horizontal: false, vertical: true) //  Prevents text from overflowing
+                                .fixedSize(
+                                    horizontal: false,
+                                    vertical: true
+                                ) //  Prevents text from overflowing
 
                             Button(action: {
                                 print("Start Training Tapped")
@@ -49,9 +57,15 @@ struct TrainView: View {
                                     .background(Color.white)
                                     .cornerRadius(10)
                             }
-                            .padding(.bottom, 15) //  Space between button and bottom edge
+                            .padding(
+                                .bottom,
+                                15
+                            ) //  Space between button and bottom edge
                         }
-                        .padding(.leading, 20) //  More padding for better spacing
+                        .padding(
+                            .leading,
+                            20
+                        ) //  More padding for better spacing
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                         Spacer() //  Ensures the image is not pushed too far left
@@ -61,9 +75,16 @@ struct TrainView: View {
                             .scaledToFit()
                             .frame(width: 55, height: 55)
                             .foregroundColor(.yellow)
-                            .padding(.trailing, 20) //  Ensures spacing from the right
+                            .padding(
+                                .trailing,
+                                20
+                            ) //  Ensures spacing from the right
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 140, alignment: .center) // Ensures full width usage
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: 140,
+                        alignment: .center
+                    ) // Ensures full width usage
                 }
                 .padding(.top, 15)
 
@@ -73,14 +94,19 @@ struct TrainView: View {
                 if viewModel.trainings.isEmpty {
                     EmptyTrainingView()
                 } else {
-                    TrainingListView(viewModel: viewModel, deleteTrainingAt: deleteTrainingAt)
+                    TrainingListView(
+                        viewModel: viewModel,
+                        deleteTrainingAt: deleteTrainingAt
+                    )
                 }
             }
             .onAppear {
                 viewModel.fetchTrainings(context: context)
             }
             .navigationTitle("Trainings")
-            .navigationBarBackButtonHidden(true) //  Hide the default back button
+            .navigationBarBackButtonHidden(
+                true
+            ) //  Hide the default back button
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) { // Custom Back Button
                     Button(action: {
@@ -140,13 +166,20 @@ struct TrainingListView: View {
     var body: some View {
         List {
             ForEach(viewModel.trainings, id: \.id) { training in
-                NavigationLink(destination: WorkoutView(viewModel: WorkoutViewModel(), trainingName: training.name)) {
+                NavigationLink(
+                    destination: WorkoutView(
+                        viewModel: WorkoutViewModel(),
+                        trainingName: training.name
+                    )
+                ) {
                     TrainingRow(training: training)
                 }
                 .swipeActions {
                     // Delete Button
                     Button(role: .destructive) {
-                        if let index = viewModel.trainings.firstIndex(where: { $0.id == training.id }) {
+                        if let index = viewModel.trainings.firstIndex(
+                            where: { $0.id == training.id
+                            }) {
                             deleteTrainingAt(IndexSet(integer: index))
                         }
                     } label: {
@@ -294,13 +327,16 @@ struct EditTrainingView: View {
         training.duration = durationInt
 
         try? context.save()
-        viewModel.fetchTrainings(context: context) //  Refresh the list after editing
+        viewModel
+            .fetchTrainings(context: context) //  Refresh the list after editing
     }
 }
 
 struct AddTrainingView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var context //  Ensure SwiftData context is available
+    @Environment(
+        \.modelContext
+    ) private var context //  Ensure SwiftData context is available
     @State private var name: String = ""
     @State private var duration: String = ""
     @State private var selectedImage: UIImage?
@@ -377,14 +413,25 @@ struct AddTrainingView: View {
                     Button("Save") {
                         print(" DEBUG: Name = \(name), Duration = \(duration)")
                         guard let durationInt = Int(duration), !name.isEmpty else {
-                            print(" DEBUG: Invalid input - Name or Duration missing")
+                            print(
+                                " DEBUG: Invalid input - Name or Duration missing"
+                            )
                             return
                         }
-                        viewModel.addTraining(context: context, name: name, duration: durationInt, image: selectedImage)
+                        viewModel
+                            .addTraining(
+                                context: context,
+                                name: name,
+                                duration: durationInt,
+                                image: selectedImage
+                            )
                         dismiss()
                     }
                     .frame(width: 130, height: 50)
-                    .background(name.isEmpty || duration.isEmpty ? Color.gray.opacity(0.5) : Color.purple)
+                    .background(
+                        name.isEmpty || duration.isEmpty ? Color.gray
+                            .opacity(0.5) : Color.purple
+                    )
                     .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .disabled(name.isEmpty || duration.isEmpty)
@@ -398,7 +445,9 @@ struct AddTrainingView: View {
                         dismiss()
                     }) {
                         Image(systemName: "xmark")
-                            .font(.system(size: 12, weight: .bold)) // Slightly bigger
+                            .font(
+                                .system(size: 12, weight: .bold)
+                            ) // Slightly bigger
                             .foregroundColor(.white)
                             .padding(8)
                             .background(Color.purple)
@@ -426,7 +475,11 @@ struct PhotoPicker: UIViewControllerRepresentable {
         return picker
     }
     
-    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+    func updateUIViewController(
+        _ uiViewController: PHPickerViewController,
+        context: Context
+    ) {
+    }
     
     func makeCoordinator() -> Coordinator {
         return Coordinator(self)
@@ -439,7 +492,10 @@ struct PhotoPicker: UIViewControllerRepresentable {
             self.parent = parent
         }
         
-        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        func picker(
+            _ picker: PHPickerViewController,
+            didFinishPicking results: [PHPickerResult]
+        ) {
             picker.dismiss(animated: true)
             
             guard let provider = results.first?.itemProvider else { return }

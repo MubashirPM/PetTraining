@@ -87,6 +87,7 @@ struct LoginView: View {
                         viewModel.login(email: email, password: password) { success in
                             if success {
                                 navigateToHome = true
+                                
                             }
                         }
                     }) {

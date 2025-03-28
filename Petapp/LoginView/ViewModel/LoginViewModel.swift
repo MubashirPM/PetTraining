@@ -24,9 +24,9 @@ class LoginViewModel: ObservableObject{
                     self.alertMessage = error.localizedDescription
                     self.showAlert = true
                     completion(false)
-                
                 } else {
                     completion(true)
+                    print("Gmail == \(email)")
                 }
             }
     }

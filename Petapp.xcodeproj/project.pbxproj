@@ -21,7 +21,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DB409D2F2D55CFD3005AB2E8 /* Petapp */ = {
+		DB2A89A22D9D67D500385B05 /* Petapp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Petapp;
 			sourceTree = "<group>";
@@ -49,7 +49,7 @@
 		DB409D242D55CFD3005AB2E8 = {
 			isa = PBXGroup;
 			children = (
-				DB409D2F2D55CFD3005AB2E8 /* Petapp */,
+				DB2A89A22D9D67D500385B05 /* Petapp */,
 				DB409D2E2D55CFD3005AB2E8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -78,7 +78,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				DB409D2F2D55CFD3005AB2E8 /* Petapp */,
+				DB2A89A22D9D67D500385B05 /* Petapp */,
 			);
 			name = Petapp;
 			packageProductDependencies = (

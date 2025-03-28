@@ -36,11 +36,14 @@ class TrainingItem {
     }
 }
 
+
+
 @main
 struct PetApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     var sharedModelContainer: ModelContainer
+    @StateObject var authManager = AuthManager()
 
     init() {
         do {
@@ -52,7 +55,8 @@ struct PetApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TrainView()
+            HomeView()
+                .environmentObject(authManager)
                 .modelContainer(sharedModelContainer)
         }
     }

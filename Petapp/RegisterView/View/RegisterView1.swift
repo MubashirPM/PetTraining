@@ -14,6 +14,7 @@ struct RegisterView: View {
     @State private var showErrorAlert = false
     @State private var isLoading = false
     @State private var navigateToProfile = false
+    @EnvironmentObject var authManager: AuthManager
 
     var body: some View {
         NavigationView {

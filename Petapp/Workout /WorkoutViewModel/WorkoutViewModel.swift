@@ -17,13 +17,17 @@ class WorkoutViewModel: ObservableObject {
             print("🔍 Fetching workouts for trainingName: \(trainingName)")
 
             let allWorkouts = try context.fetch(FetchDescriptor<Workout>())
-            print("🗂️ All stored workouts: \(allWorkouts.map { $0.trainingName })")
+            print(
+                "🗂️ All stored workouts: \(allWorkouts.map { $0.trainingName })"
+            )
 
             var descriptor = FetchDescriptor<Workout>(
                 predicate: #Predicate { workout in
                     workout.trainingName == trainingName
                 },
-                sortBy: [SortDescriptor(\Workout.name)] // Sorting for consistency
+                sortBy: [SortDescriptor(
+                    \Workout.name
+                )] // Sorting for consistency
             )
             let fetchedWorkouts = try context.fetch(descriptor)
 
@@ -31,16 +35,28 @@ class WorkoutViewModel: ObservableObject {
                 self.workouts = fetchedWorkouts  //  Update UI with new data
             }
 
-            print(" fetchWorkouts() called – Found \(fetchedWorkouts.count) workouts for training: \(trainingName)")
+            print(
+                " fetchWorkouts() called – Found \(fetchedWorkouts.count) workouts for training: \(trainingName)"
+            )
         } catch {
             print(" ERROR: Fetching workouts failed: \(error)")
         }
     }
 
-    func addWorkout(context: ModelContext, name: String, duration: Int, exercises: [Exercise], trainingName: String) {
+    func addWorkout(
+        context: ModelContext,
+        name: String,
+        duration: Int,
+        exercises: [Exercise],
+        trainingName: String
+    ) {
         print(" Attempting to save workout: \(name), Training: \(trainingName)")
 
-        let newWorkout = Workout(name: name, duration: duration, trainingName: trainingName)
+        let newWorkout = Workout(
+            name: name,
+            duration: duration,
+            trainingName: trainingName
+        )
         context.insert(newWorkout)
 
         do {

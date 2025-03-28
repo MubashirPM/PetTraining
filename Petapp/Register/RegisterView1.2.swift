@@ -1,10 +1,10 @@
+////
+////  RegisterView1.2.swift
+////  Petapp
+////
+////  Created by MUNAVAR PM on 07/02/25.
+////
 //
-//  RegisterView1.2.swift
-//  Petapp
-//
-//  Created by MUNAVAR PM on 07/02/25.
-//
-
 import SwiftUI
 import SwiftData
 import PhotosUI
@@ -21,11 +21,23 @@ struct RegisterProfileView: View {
     @State private var dateOfBirth = Date()
     @State private var weight = ""
     @State private var height = ""
-    @State private var category = "Dog" // ✅ Matches PetProfile model
+    @State private var category = "Dog" //  Matches PetProfile model
     @State private var gender = "Male"
     @State private var selectedImage: UIImage? = nil
     @State private var isImagePickerPresented = false
     @State private var imageSelection: PhotosPickerItem? = nil
+    
+    // for showing the alert and alert text
+    @State private var showAlert = false
+    @State private var article = Article(
+        title: "Do you want to proceed?",
+        description: "Are you sure you have entered your pet's data correctly?"
+    )
+    
+    // for showing ErrorAlert
+    @State private var ErrorAlert = false
+    @State private var errorArtical = Article(title: "Error!⚠️", description: "Invalid weight or height input")
+        
 
     let energyLevels = ["Low", "Medium", "High"]
     let startDate = Calendar.current.date(from: DateComponents(year: 2000))!
@@ -57,7 +69,9 @@ struct RegisterProfileView: View {
                         .frame(width:200) // Ensure it expands properly
                         .background(
                             LinearGradient(
-                                gradient: Gradient(colors: [Color.purple, Color.blue]),
+                                gradient: Gradient(
+                                    colors: [Color.purple, Color.blue]
+                                ),
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -65,10 +79,15 @@ struct RegisterProfileView: View {
                         .cornerRadius(10)
                 }
 
-                .photosPicker(isPresented: $isImagePickerPresented, selection: $imageSelection)
+                .photosPicker(
+                    isPresented: $isImagePickerPresented,
+                    selection: $imageSelection
+                )
                 .onChange(of: imageSelection) { newItem in
                     Task {
-                        if let data = try? await newItem?.loadTransferable(type: Data.self),
+                        if let data = try? await newItem?.loadTransferable(
+                            type: Data.self
+                        ),
                            let uiImage = UIImage(data: data) {
                             selectedImage = uiImage
                         }
@@ -76,9 +95,21 @@ struct RegisterProfileView: View {
                 }
 
                 //  Text Fields
-                CustomTextField(icon: "person", placeholder: "Pet Name", text: $petName)
-                CustomTextField(icon: "location", placeholder: "Location", text: $location)
-                CustomTextField(icon: "text.justify", placeholder: "Additional Details", text: $details)
+                CustomTextField(
+                    icon: "person",
+                    placeholder: "Pet Name",
+                    text: $petName
+                )
+                CustomTextField(
+                    icon: "location",
+                    placeholder: "Location",
+                    text: $location
+                )
+                CustomTextField(
+                    icon: "text.justify",
+                    placeholder: "Additional Details",
+                    text: $details
+                )
 
                 //  Category Selection (Dog / Cat)
                 HStack {
@@ -90,7 +121,12 @@ struct RegisterProfileView: View {
                                 .background {
                                     if category == type {
                                         LinearGradient(
-                                            gradient: Gradient(colors: [Color.purple, Color.blue]),
+                                            gradient: Gradient(
+                                                colors: [
+                                                    Color.purple,
+                                                    Color.blue
+                                                ]
+                                            ),
                                             startPoint: .leading,
                                             endPoint: .trailing
                                         )
@@ -123,8 +159,10 @@ struct RegisterProfileView: View {
                         Image(systemName: "bolt")
                             .foregroundColor(.white)
                         
-                        Text(energyLevel.isEmpty ? "Select Energy Level" : energyLevel)
-                            .foregroundColor(.white)
+                        Text(
+                            energyLevel.isEmpty ? "Select Energy Level" : energyLevel
+                        )
+                        .foregroundColor(.white)
                         
                         Spacer()
                         
@@ -134,11 +172,13 @@ struct RegisterProfileView: View {
                     .padding()
                     .background(
                         LinearGradient(
-                        gradient: Gradient(colors: [Color.purple, Color.blue]),
-                        startPoint: .leading,
-                        endPoint: .trailing
+                            gradient: Gradient(
+                                colors: [Color.purple, Color.blue]
+                            ),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
                     )
-)
                     .cornerRadius(10)
                 }
 
@@ -148,47 +188,84 @@ struct RegisterProfileView: View {
                         .font(.subheadline)
                         .foregroundColor(.gray)
 
-                    DatePicker("", selection: $dateOfBirth, in: startDate...endDate, displayedComponents: .date)
-                        .datePickerStyle(.compact)
-                        .labelsHidden()
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(10)
+                    DatePicker(
+                        "",
+                        selection: $dateOfBirth,
+                        in: startDate...endDate,
+                        displayedComponents: .date
+                    )
+                    .datePickerStyle(.compact)
+                    .labelsHidden()
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(10)
                 }
                 .padding(.horizontal)
 
                 //  Weight Input
                 HStack {
-                    CustomTextField(icon: "scalemass", placeholder: "Weight (kg)", text: $weight)
-                        .keyboardType(.decimalPad)
+                    CustomTextField(
+                        icon: "scalemass",
+                        placeholder: "Weight (kg)",
+                        text: $weight
+                    )
+                    .keyboardType(.decimalPad)
                     UnitButton(title: "KG")
                 }
                 .padding(.horizontal)
 
                 //  Height Input
                 HStack {
-                    CustomTextField(icon: "ruler", placeholder: "Height (cm)", text: $height)
-                        .keyboardType(.decimalPad)
+                    CustomTextField(
+                        icon: "ruler",
+                        placeholder: "Height (cm)",
+                        text: $height
+                    )
+                    .keyboardType(.decimalPad)
                     UnitButton(title: "CM")
                 }
                 .padding(.horizontal)
 
                 //  Save Profile Button
-                Button(action: saveProfile) {
+                Button {
+                    showAlert = true
+                } label: {
                     Text("Save Profile")
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(
                             LinearGradient(
-                            gradient: Gradient(colors: [Color.purple, Color.blue]),
-                            startPoint: .leading,
-                            endPoint: .trailing
+                                gradient: Gradient(
+                                    colors: [Color.purple, Color.blue]
+                                ),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                         )
-)
                         .cornerRadius(10)
                 }
                 .padding()
+                .alert(
+                    article.title,
+                    isPresented: $showAlert,
+                    presenting: article
+                ) {article in
+                    Button("Save") { saveProfile() }
+                    Button("Cancel", role: .cancel) {}
+                } message: {article in
+                    Text(article.description)
+                }
+                // to show the error for save
+                .alert(
+                    errorArtical.title,
+                    isPresented: $ErrorAlert,
+                    presenting: errorArtical
+                ) {article in
+                    Button("Cancel", role: .cancel) {}
+                } message: {article in
+                    Text(errorArtical.description)
+                }
 
                 Spacer()
             }
@@ -201,8 +278,10 @@ struct RegisterProfileView: View {
                         dismiss() // Custom back button action
                     }) {
                         HStack {
-                            Image(systemName: "chevron.left") //  Custom back icon
-                                .font(.system(size: 18, weight: .semibold))
+                            Image(
+                                systemName: "chevron.left"
+                            ) //  Custom back icon
+                            .font(.system(size: 18, weight: .semibold))
                             Text("Back")
                         }
                         .foregroundColor(.purple) //  Purple back button color
@@ -212,9 +291,12 @@ struct RegisterProfileView: View {
         }
     }
 
-
+    
+    /// For saving data of pets
     func saveProfile() {
+        
         guard let weightValue = Double(weight), let heightValue = Double(height) else {
+            ErrorAlert = true
             print("❌ Error: Invalid weight or height input")
             return
         }
@@ -261,11 +343,11 @@ struct UnitButton: View {
             .padding(.horizontal, 20)
             .background(
                 LinearGradient(
-                gradient: Gradient(colors: [Color.purple, Color.blue]),
-                startPoint: .leading,
-                endPoint: .trailing
+                    gradient: Gradient(colors: [Color.purple, Color.blue]),
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
             )
-)
             .cornerRadius(10)
     }
 }
@@ -278,3 +360,28 @@ struct RegisterProfileView_Previews: PreviewProvider {
         }
     }
 }
+
+struct contentview : View {
+    
+    @State private var ShowAlert = false
+    
+    var body: some View {
+        VStack{
+            Button("showAlert"){
+                ShowAlert = true
+            }
+            .alert("Alert Title", isPresented: $ShowAlert){
+                Button("Ok", role: .cancel)
+                {}
+            }message:{
+                Text("This show a simple alert message ")
+            }
+        }
+    }
+}
+struct Article: Identifiable {
+    var id: String { title }
+    let title: String
+    let description: String
+}
+

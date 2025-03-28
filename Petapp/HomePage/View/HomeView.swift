@@ -6,8 +6,8 @@ import SwiftData
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var pets: [PetProfile]
-    @State private var selectedCategory: String? = nil
-    @State private var searchText = ""
+    @State private var selectedCategory: String? = nil // for checking the animal
+    @State private var searchText = "" // for checking the user enter text
     @State private var navigateToRegister = false
     @State private var petToEdit: PetProfile?
     @State private var selectedTab: AppTab = .home  //  Use AppTab instead
@@ -20,16 +20,33 @@ struct HomeView: View {
     private let primaryColor = Color.purple
     private let accentColor = Color(red: 0.3, green: 0.8, blue: 0.7)
     private let backgroundColor = Color(UIColor.systemBackground)
-    private let secondaryBackgroundColor = Color(UIColor.secondarySystemBackground)
+    private let secondaryBackgroundColor = Color(
+        UIColor.secondarySystemBackground
+    )
+    
+    @State private var showAlert = false
+    @State private var article = Article(
+        title: "going to delete",
+        description: "Are sure about delete this pet"
+    )
+    
 
+    
+    ///  filtering the pets -> dog or cats.
     var filteredPets: [PetProfile] {
         pets
             .filter { pet in
-                (selectedCategory == nil || pet.category.caseInsensitiveCompare(selectedCategory ?? "") == .orderedSame) &&
-                (searchText.isEmpty || pet.petName.localizedCaseInsensitiveContains(searchText))
+                (
+                    selectedCategory == nil || pet.category
+                        .caseInsensitiveCompare(
+                            selectedCategory ?? ""
+                        ) == .orderedSame
+                ) &&
+                (
+                    searchText.isEmpty || pet.petName
+                        .localizedCaseInsensitiveContains(searchText)
+                )
             }
-            .sorted { $0.petName.localizedCompare($1.petName) == .orderedAscending }
-// Sort alphabetically
     }
     
     var body: some View {
@@ -52,7 +69,7 @@ struct HomeView: View {
                     }
                 }
             }
-        .navigationDestination(isPresented: $navigateToRegister) {
+            .navigationDestination(isPresented: $navigateToRegister) {
                 RegisterProfileView() //  Correct View Navigation
             }
 
@@ -78,7 +95,7 @@ struct HomeView: View {
                     .padding(.bottom, 8)
             }
             
-            // Pet List
+            //MARK: Pet List
             ScrollView {
                 LazyVStack(spacing: 16) {
                     ForEach(filteredPets, id: \.id) { pet in
@@ -95,7 +112,12 @@ struct HomeView: View {
                 .background(
                     Rectangle()
                         .fill(Color.white)
-                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: -2)
+                        .shadow(
+                            color: Color.black.opacity(0.1),
+                            radius: 5,
+                            x: 0,
+                            y: -2
+                        )
                 )
         }
         .edgesIgnoringSafeArea(.bottom)
@@ -104,9 +126,15 @@ struct HomeView: View {
     private var headerView: some View {
         ZStack {
             // Background
-            LinearGradient(colors: [.blue, .purple], startPoint: .leading, endPoint: .trailing)
-                .frame(height: 60) // Fixed header height
-                .clipShape(RoundedRectangle(cornerRadius: 15)) // Clip the background to rounded corners
+            LinearGradient(
+                colors: [.blue, .purple],
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+            .frame(height: 60) // Fixed header height
+            .clipShape(
+                RoundedRectangle(cornerRadius: 15)
+            ) // Clip the background to rounded corners
 
             // Content
             HStack {
@@ -162,48 +190,68 @@ struct HomeView: View {
                 }
             }
         }
-        .background(RoundedRectangle(cornerRadius: 10).fill(secondaryBackgroundColor))
+        .background(
+            RoundedRectangle(cornerRadius: 10).fill(secondaryBackgroundColor)
+        )
     }
     
     private var categoryScrollView: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
-                Button(action: { selectedCategory = nil }) {
+                Button(action: {
+                    selectedCategory = nil
+                    print("Selected Category === All")
+                }) {
                     Text("All")
                         .fontWeight(selectedCategory == nil ? .bold : .medium)
                         .padding(.horizontal, 18)
                         .padding(.vertical, 10)
                         .background(
                             Capsule()
-                                .fill(selectedCategory == "All" ? //  Replace title with "All"
-                                      LinearGradient(gradient: Gradient(colors: [primaryColor, accentColor]),
-                                                    startPoint: .leading,
-                                                    endPoint: .trailing) :
-                                      LinearGradient(gradient: Gradient(colors: [Color.gray.opacity(0.15), Color.gray.opacity(0.15)]),
-                                                    startPoint: .leading,
-                                                    endPoint: .trailing))
+                                .fill(
+selectedCategory == "All" ? //  Replace title with "All"
+LinearGradient(
+    gradient: Gradient(
+        colors: [primaryColor, accentColor]
+    ),
+    startPoint: .leading,
+    endPoint: .trailing
+) :
+    LinearGradient(
+        gradient: Gradient(
+            colors: [Color.gray.opacity(0.15), Color.gray.opacity(0.15)]
+        ),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+                                )
                         )
-                .foregroundColor(selectedCategory == nil ? .white : .primary)
-
-//
+                        .foregroundColor(
+                            selectedCategory == nil ? .white : .primary
+                        )
                 }
                 
+                // To selectedCategory we passing "title".
                 EnhancedCategoryButton(title: "Cat", icon: "cat", selectedCategory: $selectedCategory,
-                                      primaryColor: primaryColor, accentColor: accentColor)
+                                       primaryColor: primaryColor, accentColor: accentColor)
                 
                 EnhancedCategoryButton(title: "Dog", icon: "dog", selectedCategory: $selectedCategory,
-                                      primaryColor: primaryColor, accentColor: accentColor)
+                                       primaryColor: primaryColor, accentColor: accentColor)
                 
             }
             .padding(.horizontal)
         }
     }
     private func enhancedPetCard(_ pet: PetProfile) -> some View {
-        NavigationLink(destination: AnimalDetailView(animal: convertToAnimal(pet))) { //  Wrap in NavigationLink
+        NavigationLink(
+            destination: AnimalDetailView(animal: convertToAnimal(pet))
+        ) { //  Wrap in NavigationLink
             VStack(spacing: 0) {
                 // Pet Image Section
                 ZStack(alignment: .topTrailing) {
-                    if let imageData = pet.imageData, let uiImage = UIImage(data: imageData) {
+                    if let imageData = pet.imageData, let uiImage = UIImage(
+                        data: imageData
+                    ) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -211,11 +259,15 @@ struct HomeView: View {
                             .clipped()
                     } else {
                         Rectangle()
-                            .fill(LinearGradient(
-                                gradient: Gradient(colors: [.gray.opacity(0.3), .gray.opacity(0.5)]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ))
+                            .fill(
+LinearGradient(
+    gradient: Gradient(
+        colors: [.gray.opacity(0.3), .gray.opacity(0.5)]
+    ),
+    startPoint: .topLeading,
+    endPoint: .bottomTrailing
+)
+                            )
                             .frame(height: 180)
                             .overlay(
                                 Image(systemName: "pawprint.fill")
@@ -230,21 +282,39 @@ struct HomeView: View {
                     VStack(spacing: 8) {
                         // Favorite Button
                         Button(action: { toggleFavorite(pet) }) {
-                            Image(systemName: isFavorite(pet) ? "heart.fill" : "heart")
-                                .foregroundColor(isFavorite(pet) ? .red : .white)
-                                .padding(8)
-                                .background(Circle().fill(Color.black.opacity(0.3)))
+                            Image(
+                                systemName: isFavorite(
+                                    pet
+                                ) ? "heart.fill" : "heart"
+                            )
+                            .foregroundColor(isFavorite(pet) ? .red : .white)
+                            .padding(8)
+                            .background(Circle().fill(Color.black.opacity(0.3)))
                         }
 
-                        // Trash Button (Delete Pet)
-                        Button(action: { deletePet(pet) }) {
+                      
+                        Button {
+                            showAlert = true
+                        } label: {
                             Image(systemName: "trash")
                                 .foregroundColor(.red)
                                 .padding(8)
-                                .background(Circle().fill(Color.black.opacity(0.3)))
+                                .background(
+                                    Circle().fill(Color.black.opacity(0.3))
+                                )
                         }
                     }
                     .padding(12)
+                    .alert(
+                        article.title,
+                        isPresented: $showAlert,
+                        presenting: article
+                    ) {article in
+                        Button("Delete") { deletePet(pet)}
+                        Button("Cancel", role: .cancel) {}
+                    } message: {article in
+                        Text(article.description)
+                    }
                 }
 
                 // Pet Details Section
@@ -271,7 +341,10 @@ struct HomeView: View {
                     Divider()
 
                     HStack(spacing: 20) {
-                        LabeledInfo(icon: "mappin.circle.fill", label: pet.location)
+                        LabeledInfo(
+                            icon: "mappin.circle.fill",
+                            label: pet.location
+                        )
                         LabeledInfo(icon: "person.fill", label: pet.gender)
                     }
                 }
@@ -353,7 +426,10 @@ struct HomeView: View {
 
     private func loadFavorites() {
         do {
-            let stringArray = try JSONDecoder().decode([String].self, from: favoritePetsData)
+            let stringArray = try JSONDecoder().decode(
+                [String].self,
+                from: favoritePetsData
+            )
             favoritePets = Set(stringArray)
         } catch {
             favoritePets = []
@@ -378,6 +454,7 @@ struct EnhancedCategoryButton: View {
         Button(action: {
             withAnimation {
                 selectedCategory = (selectedCategory == title) ? nil : title
+                print("Selected Category === \(title)")
             }
         }) {
             HStack(spacing: 8) {
@@ -391,13 +468,23 @@ struct EnhancedCategoryButton: View {
             .padding(.vertical, 10)
             .background(
                 Capsule()
-                    .fill(isSelected ?
-                          LinearGradient(gradient: Gradient(colors: [primaryColor, accentColor]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing) :
-                          LinearGradient(gradient: Gradient(colors: [Color.gray.opacity(0.15), Color.gray.opacity(0.15)]),
-                                        startPoint: .leading,
-                                        endPoint: .trailing))
+                    .fill(
+isSelected ?
+LinearGradient(
+    gradient: Gradient(
+        colors: [primaryColor, accentColor]
+    ),
+    startPoint: .leading,
+    endPoint: .trailing
+) :
+    LinearGradient(
+        gradient: Gradient(
+            colors: [Color.gray.opacity(0.15), Color.gray.opacity(0.15)]
+        ),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+                    )
             )
             .foregroundColor(isSelected ? .white : .primary)
         }
@@ -416,7 +503,9 @@ struct EnhancedTabBarButton: View {
             VStack(spacing: 6) {
                 ZStack {
                     Circle()
-                        .fill(isSelected ? primaryColor.opacity(0.1) : Color.clear)
+                        .fill(
+                            isSelected ? primaryColor.opacity(0.1) : Color.clear
+                        )
                         .frame(width: 48, height: 48)
                     
                     Image(systemName: icon)
@@ -425,7 +514,12 @@ struct EnhancedTabBarButton: View {
                 }
                 
                 Text(label)
-                    .font(.system(size: 12, weight: isSelected ? .semibold : .medium))
+                    .font(
+                        .system(
+                            size: 12,
+                            weight: isSelected ? .semibold : .medium
+                        )
+                    )
                     .foregroundColor(isSelected ? primaryColor : .gray)
             }
             .frame(maxWidth: .infinity)
@@ -499,9 +593,6 @@ struct EditProfileView: View {
         dismiss()
     }
 }
-import SwiftUI
-import SwiftData
-
 struct ProfileView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var pets: [PetProfile] //  Fetch pets from SwiftData
@@ -520,7 +611,10 @@ struct ProfileView: View {
                         .padding()
                 } else {
                     List {
-                        ForEach(pets, id: \.id) { pet in // Correct ForEach placement
+                        ForEach(
+                            pets,
+                            id: \.id
+                        ) { pet in // Correct ForEach placement
                             HStack {
                                 Text(pet.petName)
                                     .font(.headline)
@@ -534,7 +628,9 @@ struct ProfileView: View {
                                 }
                             }
                         }
-                        .onDelete(perform: deletePets) //  Swipe to delete now works!
+                        .onDelete(
+                            perform: deletePets
+                        ) //  Swipe to delete now works!
                     }
                     .listStyle(InsetGroupedListStyle())
                 }
@@ -572,7 +668,8 @@ private func convertToAnimal(_ pet: PetProfile) -> Animal {
         breed: "Unknown", // You can replace this if breed data exists
         gender: pet.gender,
         description: pet.details,
-        image: pet.imageData != nil ? pet.imageData!.base64EncodedString() : "default_pet",
+        image: pet.imageData != nil ? pet.imageData!
+            .base64EncodedString() : "default_pet",
         gallery: [], //  Add gallery (empty for now)
         category: pet.category //  Include category from PetProfile
     )

@@ -10,8 +10,8 @@ import SwiftUI
 import SwiftData
 
 class HomeViewModel: ObservableObject {
-    @Published var pets: [PetProfile] = [] //  Holds pets list
-    private var modelContext: ModelContext //  Store SwiftData Context
+    @Published var pets: [PetProfile] = [] //  Holds the list of the pets
+    private var modelContext: ModelContext
 
     //  Initialize with SwiftData Context
     init(context: ModelContext) {

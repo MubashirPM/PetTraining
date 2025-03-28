@@ -5,49 +5,16 @@
 //  Created by MUNAVAR PM on 27/02/25.
 //
 
-//import SwiftUI
-//import SwiftData
-//
-//struct WishlistView: View {
-//    let favoritePets: Set<String>
-//    let toggleFavorite: (PetProfile) -> Void
-//    let isFavorite: (PetProfile) -> Bool
-//    @Query private var pets: [PetProfile]
-//
-//    var favoriteList: [PetProfile] {
-//        pets.filter { pet in favoritePets.contains(String(describing: pet.id)) }
-//    }
-//
-//    var body: some View {
-//        VStack {
-//            Text("❤️ Wishlist").font(.largeTitle).bold()
-//            if favoriteList.isEmpty {
-//                Text("No favorite pets yet!").foregroundColor(.gray)
-//            } else {
-//                List {
-//                    ForEach(favoriteList, id: \.id) { pet in
-//                        NavigationLink(destination: AnimalDetailView(animal: pet.toAnimal())) {
-//                            PetRowView(pet: pet, toggleFavorite: toggleFavorite, isFavorite: isFavorite)
-//                        }
-//                        .buttonStyle(PlainButtonStyle())
-//                    }
-//                }
-//                .listStyle(.plain)
-//            }
-//        }
-//        .padding()
-//    }
-////}
 import SwiftUI
 import SwiftData
 
 struct WishlistView: View {
-    let favoritePets: Set<String> // ✅ Passed favorite pet IDs
+    let favoritePets: Set<String>
     let toggleFavorite: (PetProfile) -> Void
     let isFavorite: (PetProfile) -> Bool
-    @Binding var selectedTab: AppTab  // ✅ Use AppTab instead
-    @Environment(\.modelContext) private var modelContext // ✅ Fetch manually
-    @State private var favoriteList: [PetProfile] = []  // ✅ Store manually
+    @Binding var selectedTab: AppTab  //  Use AppTab instead
+    @Environment(\.modelContext) private var modelContext //  Fetch manually
+    @State private var favoriteList: [PetProfile] = []  //  Store manually
 
     var body: some View {
         NavigationStack {
@@ -73,19 +40,21 @@ struct WishlistView: View {
                     .listStyle(.plain)
                 }
 
-                // ✅ Updated Tab Bar for navigation
+                Spacer()
+                //  Updated Tab Bar for navigation
                 TabBar(selectedTab: $selectedTab)
             }
-            .onAppear { loadFavoritePets() } // ✅ Load pets when view appears
+            .onAppear {
+                loadFavoritePets() } //  Load pets when view appears
         }
     }
 
-    // ✅ Function to Load Favorite Pets
+    //  Function to Load Favorite Pets
     private func loadFavoritePets() {
         do {
             let allPets: [PetProfile] = try modelContext.fetch(FetchDescriptor<PetProfile>())
             favoriteList = allPets.filter { favoritePets.contains(String(describing: $0.id)) }
-            print("Loaded Favorite Pets: \(favoriteList.count)") // ✅ Debugging
+            print("Loaded Favorite Pets: \(favoriteList.count)") //  Debugging
         } catch {
             print("Error fetching pets: \(error)")
         }

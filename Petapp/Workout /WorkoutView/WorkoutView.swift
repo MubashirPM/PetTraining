@@ -11,11 +11,11 @@ import SwiftUI
 
 //screen that displays a list of workouts for a specific training session
 struct WorkoutView: View {
-    @Environment(\.dismiss) private var dismiss //  Add dismiss environment
-    @Environment(\.modelContext) private var context
-    @StateObject var viewModel = WorkoutViewModel()
-    @State private var showAddSheet = false
-    var trainingName: String
+    @Environment(\.dismiss) private var dismiss //  handle navigation dismissals
+    @Environment(\.modelContext) private var context // swiftdata context
+    @StateObject var viewModel = WorkoutViewModel() // manage workout logic 
+    @State private var showAddSheet = false // control the workout sheet
+    var trainingName: String // name the training sections
 
     var body: some View {
         NavigationStack {
@@ -60,6 +60,7 @@ struct WorkoutView: View {
                 }
             }
             .onAppear {
+                // to ensure the ui update smoothly
                 DispatchQueue.main.async {
                     viewModel.fetchWorkouts(trainingName: trainingName, context: context)
                 }
@@ -68,7 +69,7 @@ struct WorkoutView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true) //  Hide default back button
             .toolbar {
-                // 🔹 Custom Purple Back Button
+                //  Custom Purple Back Button
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: { dismiss() }) {
                         HStack {
@@ -98,7 +99,7 @@ struct WorkoutView: View {
         }
     }
 }
-
+// showing individual workout item
 struct WorkoutRowView: View {
     let workout: Workout
     let viewModel: WorkoutViewModel

@@ -7,8 +7,6 @@
 //
 
 import SwiftUI
-import SwiftUI
-
 struct AnimalDetailView: View {
     let animal: Animal
     @Environment(\.dismiss) private var dismiss
@@ -16,7 +14,6 @@ struct AnimalDetailView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // 🔹 Pet Image (Fixed Corner Radius & Padding)
                 if let uiImage = loadImage(animal.image) {
                     Image(uiImage: uiImage)
                         .resizable()

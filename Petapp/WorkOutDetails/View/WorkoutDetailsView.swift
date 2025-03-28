@@ -10,6 +10,7 @@ struct WorkoutDetailsView: View {
     @Environment(\.dismiss) private var dismiss //  Fix: Add dismiss environment
     @StateObject var viewModel = WorkoutDetailsViewModel()
     var workout: Workout
+    @State private var isSheetShow = false
 
     var body: some View {
         VStack(spacing: 12) {
@@ -73,24 +74,35 @@ struct WorkoutDetailsView: View {
                         viewModel.pauseTimer()
                     }
                 }) {
-                    Text(viewModel.isPaused ? "Play" : "Pause")
-                        .frame(width: 100, height: 40)
-                        .background(
-                            LinearGradient(
-                                gradient: Gradient(
-                                    colors: [
-                                        Color.purple.opacity(0.6),
-                                        Color.blue
-                                    ]
-                                ),
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
+                    HStack(spacing: 8) {
+                        Image(systemName: viewModel.isPaused ? "play.fill" : "pause.fill") // Play/Pause icon
+                            .font(.title2)
+
+                        Text(viewModel.isPaused ? "Play" : "Pause")
+                            .fontWeight(.bold)
+                    }
+                    .frame(width: 120, height: 45) // Adjusted size
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.purple.opacity(0.6), Color.blue]),
+                            startPoint: .leading,
+                            endPoint: .trailing
                         )
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    )
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                    .shadow(radius: 4) // Added shadow for better UI
+                }
+                .onChange(of: viewModel.timeRemaining, { oldValue, newValue in
+                    if newValue == 0 {
+                        isSheetShow = true
+                    }
+                })
+                .onAppear {
+                    viewModel.isPaused = true // Ensure it starts in "Play" state
                 }
             }
+    
             .padding(.bottom, 20)
             
             // Skip Button
@@ -104,16 +116,28 @@ struct WorkoutDetailsView: View {
             
             Spacer()
         }
-        .onAppear {
-            print(
-                "DEBUG: Opened WorkoutDetailsView -> \(workout.name), Duration: \(workout.duration) sec"
-            )
-            viewModel.startTimer(duration: workout.duration)
-        }
+        .disabled(isSheetShow)
+        .opacity(isSheetShow ? 0 : 1)
+        // for showing sucess screen
+        .overlay(alignment: .center, content: {
+            if isSheetShow {
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(.ultraThinMaterial)
+                    .frame(width: 350,height: 500)
+                
+            
+                    .overlay {
+                        SheetView()
+                    }
+            }
+            
+        })
         .onDisappear {
             viewModel.stopTimer()
         }
-        .navigationBarBackButtonHidden(true) //  Hide default back button
+        
+        .presentationDetents([.medium])
+        .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(
                 placement: .topBarLeading

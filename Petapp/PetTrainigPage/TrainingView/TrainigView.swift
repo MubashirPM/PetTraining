@@ -15,6 +15,7 @@ struct TrainView: View {
     @State private var showAddSheet = false
     @Environment(\.dismiss) private var dismiss
     
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -70,10 +71,10 @@ struct TrainView: View {
 
                         Spacer() //  Ensures the image is not pushed too far left
 
-                        Image(systemName: "figure.run.circle.fill")
+                        Image(systemName: "pawprint.circle.fill")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 55, height: 55)
+                            .frame(width: 50, height: 50)
                             .foregroundColor(.yellow)
                             .padding(
                                 .trailing,
@@ -103,10 +104,12 @@ struct TrainView: View {
             .onAppear {
                 viewModel.fetchTrainings(context: context)
             }
+            // navigation and toolbar configuration
+            
             .navigationTitle("Trainings")
             .navigationBarBackButtonHidden(
                 true
-            ) //  Hide the default back button
+            )
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) { // Custom Back Button
                     Button(action: {
@@ -134,6 +137,8 @@ struct TrainView: View {
                 AddTrainingView(viewModel: viewModel)
             }
         }
+        .navigationBarBackButtonHidden(true)
+//        .navigationBarHidden(true)
     }
 
 

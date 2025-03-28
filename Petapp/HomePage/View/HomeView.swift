@@ -29,9 +29,7 @@ struct HomeView: View {
         title: "going to delete",
         description: "Are sure about delete this pet"
     )
-    
 
-    
     ///  filtering the pets -> dog or cats.
     var filteredPets: [PetProfile] {
         pets

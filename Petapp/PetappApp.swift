@@ -44,7 +44,7 @@ struct PetApp: App {
 
     var sharedModelContainer: ModelContainer
     @StateObject var authManager = AuthManager()
-
+    @State private var selectedTab: AppTab = .home
     init() {
         do {
             sharedModelContainer = try ModelContainer(for: PetProfile.self, Training.self, Workout.self) //  Add Workout
@@ -55,9 +55,13 @@ struct PetApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            HomeView(selectedTab: $selectedTab)
                 .environmentObject(authManager)
                 .modelContainer(sharedModelContainer)
+                .onAppear(perform: {
+                    print("authManager.isLoggedIn Home = \(authManager.isLoggedIn)")
+                    authManager.isLoggedIn = true
+                })
         }
     }
 

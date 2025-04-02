@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 struct CustomTextField: View {
     var icon: String
     var placeholder: String

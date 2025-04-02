@@ -60,10 +60,15 @@ struct SettingsView: View {
                     }
                 }
                 Spacer()
-                TabBar(selectedTab: $selectedTab)
+//                TabBar(selectedTab: $selectedTab)
+                CustomTabBar(selectedTab: $selectedTab, primaryColor: .green)
             }
+            .edgesIgnoringSafeArea(.bottom)
             .navigationTitle("Edit Profile")
             .navigationBarBackButtonHidden(true)
+            .onAppear(perform: {
+                print("authManager.isLoggedIn Settings = \(authManager.isLoggedIn)")
+            })
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -94,16 +99,21 @@ struct SettingsView: View {
             set: { _ in }
         )) {
             LoginView()
+                .environmentObject(authManager)
         }
-
     }
 }
 
 class AuthManager: ObservableObject {
     @Published var isLoggedIn = true
-    
+    @Published var isSelectedTabBar: AppTab = .home
     func logout() {
         isLoggedIn = false
+    }
+    
+    func login() {
+        isLoggedIn = true
+        isSelectedTabBar = .home
     }
 }
 

@@ -18,6 +18,8 @@ struct LoginView: View {
     @State private var isSecured = true
     @State private var alertMessage = ""
     @State private var navigateToHome = false
+    @EnvironmentObject var authManager: AuthManager
+    @State private var selectedTab: AppTab = .home
 
     var body: some View {
         NavigationView {
@@ -87,7 +89,8 @@ struct LoginView: View {
                         viewModel.login(email: email, password: password) { success in
                             if success {
                                 navigateToHome = true
-                                
+//                                authManager.isLoggedIn = true
+                                authManager.login()
                             }
                         }
                     }) {
@@ -106,9 +109,9 @@ struct LoginView: View {
                             .cornerRadius(25)
                     }
                     .padding(.top, 16)
-                    .fullScreenCover(isPresented: $navigateToHome) {
-                        HomeView()
-                    }
+//                    .fullScreenCover(isPresented: $navigateToHome) {
+//                        CustomTabBar(selectedTab: $selectedTab, primaryColor: .blue)
+//                    }
 
                     // OR Divider
                     HStack {

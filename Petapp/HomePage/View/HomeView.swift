@@ -10,7 +10,7 @@ struct HomeView: View {
     @State private var searchText = "" // for checking the user enter text
     @State private var navigateToRegister = false
     @State private var petToEdit: PetProfile?
-    @State private var selectedTab: AppTab = .home  //  Use AppTab instead
+    @Binding var selectedTab: AppTab //  Use AppTab instead
     @State private var showSearchBar = false
 
     @AppStorage("favoritePets") private var favoritePetsData: Data = Data()
@@ -79,7 +79,7 @@ struct HomeView: View {
     private var homeContent: some View {
         VStack(spacing: 0) {
             // Custom Header
-            headerView //  No need for additional background here
+            headerView
             
             // Category Scrollview
             categoryScrollView
@@ -106,17 +106,7 @@ struct HomeView: View {
             .background(backgroundColor)
             
             // Custom Tab Bar
-            enhancedTabBar
-                .background(
-                    Rectangle()
-                        .fill(Color.white)
-                        .shadow(
-                            color: Color.black.opacity(0.1),
-                            radius: 5,
-                            x: 0,
-                            y: -2
-                        )
-                )
+            CustomTabBar(selectedTab: $selectedTab, primaryColor: .blue)
         }
         .edgesIgnoringSafeArea(.bottom)
     }
@@ -551,6 +541,56 @@ struct LabeledInfo: View {
     }
 }
 
+
+
+struct CustomTabBar: View {
+    @Binding var selectedTab: AppTab
+    let primaryColor: Color
+
+    var body: some View {
+        HStack {
+            EnhancedTabBarButton(
+                icon: "house.fill",
+                label: "Home",
+                isSelected: selectedTab == .home,
+                primaryColor: primaryColor,
+                action: { selectedTab = .home }
+            )
+
+            EnhancedTabBarButton(
+                icon: "heart.fill",
+                label: "Wishlist",
+                isSelected: selectedTab == .wishlist,
+                primaryColor: primaryColor,
+                action: { selectedTab = .wishlist }
+            )
+
+            EnhancedTabBarButton(
+                icon: "person.fill",
+                label: "Profile",
+                isSelected: selectedTab == .profile,
+                primaryColor: primaryColor,
+                action: { selectedTab = .profile }
+            )
+        }
+        .onChange(of: selectedTab) { tab in
+            print("Selected Tab = \(tab)")
+        }
+        .padding()
+        .background(
+            Rectangle()
+                .fill(Color.white)
+                .shadow(
+                    color: Color.black.opacity(0.1),
+                    radius: 5,
+                    x: 0,
+                    y: -2
+                )
+        )
+    }
+}
+
+
 // Existing Structures & Components (Updated)
 
 struct EditProfileView: View {
@@ -683,5 +723,5 @@ private func convertToAnimal(_ pet: PetProfile) -> Animal {
 }
 
 #Preview {
-    HomeView()
+    HomeView(selectedTab: .constant(.home))
 }

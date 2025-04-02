@@ -42,8 +42,10 @@ struct WishlistView: View {
 
                 Spacer()
                 //  Updated Tab Bar for navigation
-                TabBar(selectedTab: $selectedTab)
+//                TabBar(selectedTab: $selectedTab)
+                CustomTabBar(selectedTab: $selectedTab, primaryColor: .red)
             }
+            .edgesIgnoringSafeArea(.bottom)
             .onAppear {
                 loadFavoritePets() } //  Load pets when view appears
         }

@@ -21,7 +21,7 @@ struct WishlistView: View {
             VStack(spacing: 10) {
                 // Header
                 HStack {
-                    Text("❤️ Wishlist").font(.largeTitle).bold()
+                    Text(" Wishlist").font(.largeTitle).bold()
                     Spacer()
                 }
                 .padding(.horizontal)
@@ -35,14 +35,16 @@ struct WishlistView: View {
                                 PetRowView(pet: pet, toggleFavorite: toggleFavorite, isFavorite: isFavorite)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .listRowInsets(EdgeInsets()) // Remove default padding
+                                       .listRowSeparator(.hidden) // Optional: Hide row separators
                         }
                     }
+                    .padding()
                     .listStyle(.plain)
+                    
                 }
 
                 Spacer()
-                //  Updated Tab Bar for navigation
-//                TabBar(selectedTab: $selectedTab)
                 CustomTabBar(selectedTab: $selectedTab, primaryColor: .red)
             }
             .edgesIgnoringSafeArea(.bottom)
@@ -50,7 +52,6 @@ struct WishlistView: View {
                 loadFavoritePets() } //  Load pets when view appears
         }
     }
-
     //  Function to Load Favorite Pets
     private func loadFavoritePets() {
         do {

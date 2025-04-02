@@ -11,7 +11,7 @@ import Combine
 
 class WorkoutDetailsViewModel: ObservableObject {
     // Published properties
-    @Published var timeRemaining: Int = 3 //  Always start at 10 min
+    @Published var timeRemaining: Int = 60 //  Always start at 10 min
     @Published var isPaused: Bool = false
     
     // Timer properties
@@ -46,7 +46,7 @@ class WorkoutDetailsViewModel: ObservableObject {
     func resetTimer(duration: Int) {
         print("DEBUG: Resetting Timer to 330 sec") //  Debug print
         stopTimer()
-        startTimer(duration: 3) //  Force restart with 5:30 min
+        startTimer(duration: 60) //  Force restart with 5:30 min
     }
     
     // Stop the timer completely

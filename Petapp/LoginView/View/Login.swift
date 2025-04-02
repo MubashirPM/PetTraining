@@ -89,26 +89,49 @@ struct LoginView: View {
                         viewModel.login(email: email, password: password) { success in
                             if success {
                                 navigateToHome = true
-//                                authManager.isLoggedIn = true
                                 authManager.login()
                             }
                         }
                     }) {
-                        Text("Login")
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [.blue, .purple]),
-                                    startPoint: .leading,
-                                    endPoint: .trailing
+                        if !viewModel.isLoading {
+                            Text(viewModel.isLoading ? "" : "Login")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [.blue, .purple]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
                                 )
-                            )
-                            .cornerRadius(25)
+                                .cornerRadius(25)
+                        } else {
+                            Text("")
+                                .fontWeight(.semibold)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [.blue, .purple]),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .cornerRadius(25)
+                                .overlay {
+                                    HStack {
+                                        Spacer()
+                                        ProgressView()
+                                            .tint(.white)
+                                        Spacer()
+                                    }
+                                }
+                        }
+                            
                     }
-                    .padding(.top, 16)
 //                    .fullScreenCover(isPresented: $navigateToHome) {
 //                        CustomTabBar(selectedTab: $selectedTab, primaryColor: .blue)
 //                    }

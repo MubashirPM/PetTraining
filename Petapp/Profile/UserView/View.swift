@@ -8,6 +8,10 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
+    
+    @Environment(\.modelContext) private var modelContext
+    @Query private var userProfile: [PetProfile]  // Fetch user profile from SwiftData
+    
     @StateObject private var viewModel = ProfileEditorViewModel(
         userProfile: UserProfileData(
             name: "",
@@ -25,42 +29,49 @@ struct SettingsView: View {
         NavigationStack {
             VStack {
                 Form {
-                    Section(header: Text("Profile Photo")) {
-                        HStack {
-                            Spacer()
-                            ProfilePhotoSelectorView(
-                                image: Binding(
-                                    get: { viewModel.userProfile.profileImage },
-                                    set: { viewModel.userProfile.profileImage = $0 }
-                                ),
-                                showImagePicker: $viewModel.showImagePicker
-                            )
-                            Spacer()
+                    if let profile = userProfile.first {
+                        Section(header: Text("Profile Photo")) {
+                            HStack {
+                                Spacer()
+                                ProfilePhotoSelectorView(
+                                    image: Binding(
+                                        get: { viewModel.userProfile.profileImage },
+                                        set: { viewModel.userProfile.profileImage = $0 }
+                                    ),
+                                    showImagePicker: $viewModel.showImagePicker
+                                )
+                                Spacer()
+                            }
                         }
-                    }
-                    
-                    Section(header: Text("Personal Information")) {
-                        TextField("Enter your name", text: $viewModel.userProfile.name)
-                            .autocapitalization(.words)
                         
-                        TextField("Enter your email", text: $viewModel.userProfile.email)
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                        
-                        TextField("Enter your country", text: $viewModel.userProfile.country)
-                    }
-                    
-                    Section {
-                        Button(action: {
-                            viewModel.saveChanges()
-                        }) {
-                            Text("Save Changes")
-                                .frame(maxWidth: .infinity, alignment: .center)
+                        Section(header: Text("Personal Information")) {
+                            TextField("Enter your name", text: Binding(
+                                get: { profile.petName },
+                                set: { profile.petName = $0 }))
+                                .autocapitalization(.words)
+                            
+                            TextField("Enter your email", text: $viewModel.userProfile.email)
+                                .keyboardType(.emailAddress)
+                                .autocapitalization(.none)
+                            
+                            TextField("Enter your country", text: $viewModel.userProfile.country)
                         }
+                        
+                        Section {
+                            Button(action: {
+                                try? modelContext.save()
+                                viewModel.saveChanges()
+                                
+                            }) {
+                                Text("Save Changes")
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                        }
+                    } else {
+                        Text("No Profile Data Found")
                     }
                 }
                 Spacer()
-//                TabBar(selectedTab: $selectedTab)
                 CustomTabBar(selectedTab: $selectedTab, primaryColor: .green)
             }
             .edgesIgnoringSafeArea(.bottom)
@@ -88,11 +99,6 @@ struct SettingsView: View {
                     set: { viewModel.userProfile.profileImage = $0 }
                 ))
             }
-            
-//            NavigationLink(destination: LoginView(), isActive: Binding(
-//                get: { !authManager.isLoggedIn },
-//                set: { _ in }
-//            )) { EmptyView() }
         }
         .fullScreenCover(isPresented: Binding(
             get: { !authManager.isLoggedIn },

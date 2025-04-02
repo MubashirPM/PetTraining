@@ -63,7 +63,7 @@ struct HomeView: View {
                             selectedTab: $selectedTab
                         )
                     } else if selectedTab == .profile {
-                        SettingsView()
+                        SettingsView(selectedTab: $selectedTab)
                     }
                 }
             }
@@ -207,21 +207,24 @@ struct HomeView: View {
                         .background(
                             Capsule()
                                 .fill(
-selectedCategory == "All" ? //  Replace title with "All"
-LinearGradient(
-    gradient: Gradient(
-        colors: [primaryColor, accentColor]
-    ),
-    startPoint: .leading,
-    endPoint: .trailing
-) :
-    LinearGradient(
-        gradient: Gradient(
-            colors: [Color.gray.opacity(0.15), Color.gray.opacity(0.15)]
-        ),
-        startPoint: .leading,
-        endPoint: .trailing
-    )
+                                    selectedCategory == "All" ? //  Replace title with "All"
+                                    LinearGradient(
+                                        gradient: Gradient(
+                                            colors: [primaryColor, accentColor]
+                                        ),
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ) :
+                                        LinearGradient(
+                                            gradient: Gradient(
+                                                colors: [
+                                                    Color.gray.opacity(0.15),
+                                                    Color.gray.opacity(0.15)
+                                                ]
+                                            ),
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
                                 )
                         )
                         .foregroundColor(
@@ -258,13 +261,16 @@ LinearGradient(
                     } else {
                         Rectangle()
                             .fill(
-LinearGradient(
-    gradient: Gradient(
-        colors: [.gray.opacity(0.3), .gray.opacity(0.5)]
-    ),
-    startPoint: .topLeading,
-    endPoint: .bottomTrailing
-)
+                                LinearGradient(
+                                    gradient: Gradient(
+                                        colors: [
+                                            .gray.opacity(0.3),
+                                            .gray.opacity(0.5)
+                                        ]
+                                    ),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
                             )
                             .frame(height: 180)
                             .overlay(
@@ -467,21 +473,24 @@ struct EnhancedCategoryButton: View {
             .background(
                 Capsule()
                     .fill(
-isSelected ?
-LinearGradient(
-    gradient: Gradient(
-        colors: [primaryColor, accentColor]
-    ),
-    startPoint: .leading,
-    endPoint: .trailing
-) :
-    LinearGradient(
-        gradient: Gradient(
-            colors: [Color.gray.opacity(0.15), Color.gray.opacity(0.15)]
-        ),
-        startPoint: .leading,
-        endPoint: .trailing
-    )
+                        isSelected ?
+                        LinearGradient(
+                            gradient: Gradient(
+                                colors: [primaryColor, accentColor]
+                            ),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        ) :
+                            LinearGradient(
+                                gradient: Gradient(
+                                    colors: [
+                                        Color.gray.opacity(0.15),
+                                        Color.gray.opacity(0.15)
+                                    ]
+                                ),
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
                     )
             )
             .foregroundColor(isSelected ? .white : .primary)

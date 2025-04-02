@@ -19,55 +19,52 @@ struct SettingsView: View {
     @EnvironmentObject var authManager: AuthManager
     @State private var isNavigateToRegistation = false
     
+    @Binding var selectedTab: AppTab
+    
     var body: some View {
         NavigationStack {
-            Form {
-                Section(header: Text("Profile Photo")) {
-                    HStack {
-                        Spacer()
-                        ProfilePhotoSelectorView(
-                            image: Binding(
-                                get: { viewModel.userProfile.profileImage },
-                                set: { viewModel.userProfile.profileImage = $0 }
-                            ),
-                            showImagePicker: $viewModel.showImagePicker
-                        )
-                        Spacer()
+            VStack {
+                Form {
+                    Section(header: Text("Profile Photo")) {
+                        HStack {
+                            Spacer()
+                            ProfilePhotoSelectorView(
+                                image: Binding(
+                                    get: { viewModel.userProfile.profileImage },
+                                    set: { viewModel.userProfile.profileImage = $0 }
+                                ),
+                                showImagePicker: $viewModel.showImagePicker
+                            )
+                            Spacer()
+                        }
+                    }
+                    
+                    Section(header: Text("Personal Information")) {
+                        TextField("Enter your name", text: $viewModel.userProfile.name)
+                            .autocapitalization(.words)
+                        
+                        TextField("Enter your email", text: $viewModel.userProfile.email)
+                            .keyboardType(.emailAddress)
+                            .autocapitalization(.none)
+                        
+                        TextField("Enter your country", text: $viewModel.userProfile.country)
+                    }
+                    
+                    Section {
+                        Button(action: {
+                            viewModel.saveChanges()
+                        }) {
+                            Text("Save Changes")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
                     }
                 }
-                
-                Section(header: Text("Personal Information")) {
-                    TextField("Enter your name", text: $viewModel.userProfile.name)
-                        .autocapitalization(.words)
-                    
-                    TextField("Enter your email", text: $viewModel.userProfile.email)
-                        .keyboardType(.emailAddress)
-                        .autocapitalization(.none)
-                    
-                    TextField("Enter your country", text: $viewModel.userProfile.country)
-                }
-                
-                Section {
-                    Button(action: {
-                        viewModel.saveChanges()
-                    }) {
-                        Text("Save Changes")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                }
+                Spacer()
+                TabBar(selectedTab: $selectedTab)
             }
             .navigationTitle("Edit Profile")
             .navigationBarBackButtonHidden(true)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.blue)
-                    }
-                }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         authManager.logout()

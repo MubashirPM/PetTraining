@@ -20,6 +20,7 @@ struct LoginView: View {
     @State private var navigateToHome = false
     @EnvironmentObject var authManager: AuthManager
     @State private var selectedTab: AppTab = .home
+    @State var userDefult = UserDefaultsManager()
 
     var body: some View {
         NavigationView {
@@ -90,6 +91,7 @@ struct LoginView: View {
                             if success {
                                 navigateToHome = true
                                 authManager.login()
+                                userDefult.email = email
                             }
                         }
                     }) {

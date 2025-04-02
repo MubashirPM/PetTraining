@@ -22,6 +22,7 @@ struct SettingsView: View {
     @Environment(\.presentationMode) private var presentationMode
     @EnvironmentObject var authManager: AuthManager
     @State private var isNavigateToRegistation = false
+    @State var userDefult = UserDefaultsManager()
     
     @Binding var selectedTab: AppTab
     
@@ -50,9 +51,10 @@ struct SettingsView: View {
                                 set: { profile.petName = $0 }))
                                 .autocapitalization(.words)
                             
-                            TextField("Enter your email", text: $viewModel.userProfile.email)
+                            Text(userDefult.email)
                                 .keyboardType(.emailAddress)
                                 .autocapitalization(.none)
+                                .foregroundStyle(Color.gray)
                             
                             TextField("Enter your country", text: $viewModel.userProfile.country)
                         }
@@ -84,6 +86,7 @@ struct SettingsView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         authManager.logout()
+                        userDefult.email = ""
                     } label: {
                         Image("ic-logoutBT")
                             .resizable()

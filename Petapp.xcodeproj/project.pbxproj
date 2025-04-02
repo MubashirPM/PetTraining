@@ -16,14 +16,30 @@
 		DBE4D15C2D5CBB4E00A5C31D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = DBE4D15B2D5CBB4E00A5C31D /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		DB5002352DB7556B0084A024 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DB409D252D55CFD3005AB2E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DB409D2C2D55CFD3005AB2E8;
+			remoteInfo = Petapp;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		DB409D2D2D55CFD3005AB2E8 /* Petapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Petapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB5002312DB7556A0084A024 /* PetappTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PetappTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DB2A89A22D9D67D500385B05 /* Petapp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Petapp;
+			sourceTree = "<group>";
+		};
+		DB5002322DB7556B0084A024 /* PetappTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PetappTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -43,6 +59,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DB50022E2DB7556A0084A024 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -50,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				DB2A89A22D9D67D500385B05 /* Petapp */,
+				DB5002322DB7556B0084A024 /* PetappTests */,
 				DB409D2E2D55CFD3005AB2E8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				DB409D2D2D55CFD3005AB2E8 /* Petapp.app */,
+				DB5002312DB7556A0084A024 /* PetappTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -94,6 +119,29 @@
 			productReference = DB409D2D2D55CFD3005AB2E8 /* Petapp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DB5002302DB7556A0084A024 /* PetappTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB5002372DB7556B0084A024 /* Build configuration list for PBXNativeTarget "PetappTests" */;
+			buildPhases = (
+				DB50022D2DB7556A0084A024 /* Sources */,
+				DB50022E2DB7556A0084A024 /* Frameworks */,
+				DB50022F2DB7556A0084A024 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DB5002362DB7556B0084A024 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DB5002322DB7556B0084A024 /* PetappTests */,
+			);
+			name = PetappTests;
+			packageProductDependencies = (
+			);
+			productName = PetappTests;
+			productReference = DB5002312DB7556A0084A024 /* PetappTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -106,6 +154,10 @@
 				TargetAttributes = {
 					DB409D2C2D55CFD3005AB2E8 = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					DB5002302DB7556A0084A024 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = DB409D2C2D55CFD3005AB2E8;
 					};
 				};
 			};
@@ -127,12 +179,20 @@
 			projectRoot = "";
 			targets = (
 				DB409D2C2D55CFD3005AB2E8 /* Petapp */,
+				DB5002302DB7556A0084A024 /* PetappTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DB409D2B2D55CFD3005AB2E8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB50022F2DB7556A0084A024 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -149,7 +209,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DB50022D2DB7556A0084A024 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DB5002362DB7556B0084A024 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DB409D2C2D55CFD3005AB2E8 /* Petapp */;
+			targetProxy = DB5002352DB7556B0084A024 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		DB409D392D55CFD4005AB2E8 /* Debug */ = {
@@ -337,6 +412,40 @@
 			};
 			name = Release;
 		};
+		DB5002382DB7556B0084A024 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mubashir.PetappTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Petapp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Petapp";
+			};
+			name = Debug;
+		};
+		DB5002392DB7556B0084A024 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mubashir.PetappTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Petapp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Petapp";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -354,6 +463,15 @@
 			buildConfigurations = (
 				DB409D3C2D55CFD4005AB2E8 /* Debug */,
 				DB409D3D2D55CFD4005AB2E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DB5002372DB7556B0084A024 /* Build configuration list for PBXNativeTarget "PetappTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB5002382DB7556B0084A024 /* Debug */,
+				DB5002392DB7556B0084A024 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

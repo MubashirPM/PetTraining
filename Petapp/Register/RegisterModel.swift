@@ -21,7 +21,7 @@ class PetProfile {
     var category: String
     var gender: String
     var imageData: Data?
-    var isFavorite: Bool 
+    var isFavorite: Bool
 
     init(petName: String, location: String, details: String, energyLevel: String, dateOfBirth: Date, weight: Double, height: Double, category: String, gender: String, imageData: Data?, isFavorite: Bool = false) {
         self.petName = petName

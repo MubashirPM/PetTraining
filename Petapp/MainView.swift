@@ -90,7 +90,7 @@ struct MainView: View {
         .tint(.purple)
     }
 }
-
+// the is main thing
 // MARK: - Preview
 #Preview {
     MainView()
